@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import { Button, Image } from 'react-bootstrap';
+import { Alert, Button, Image } from 'react-bootstrap';
 
 class App extends Component {
 	constructor(props) {
@@ -20,14 +20,22 @@ class App extends Component {
 				lon: '',
 			},
 			map: '',
+      show: false
 		};
 	}
 
 	getLocation = async () => {
-		const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
-		const res = await axios.get(API);
-		this.setState({ location: res.data[0] });
-		this.getMap();
+    try {
+      const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
+      const res = await axios.get(API);
+      this.setState({ location: res.data[0] });
+      this.getMap();
+    }
+
+    catch (error) {
+      console.error(error)
+      this.setState({show: true})
+    }
 	};
 	getMap = async () => {
 		const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_AUTHTOKEN}&center=${this.state.location.lat},${this.state.location.lon}&zoom=18&size=500x500&format=png`;
@@ -55,9 +63,9 @@ class App extends Component {
 						<h2>Latitude: {this.state.location.lat}</h2>
 						<h2>Longitude: {this.state.location.lon}</h2>
 						<Image src={this.state.map} />
+            <Alert show={this.state.show} key={this.state.error} variant='danger'>Are you trying to break my code? Refresh and try again punk.</Alert>
 					</div>
 				)}
-				;
 			</>
 		);
 	}
