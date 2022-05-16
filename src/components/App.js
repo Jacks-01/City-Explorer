@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import { Button } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 
 
 
@@ -19,7 +19,9 @@ class App extends Component {
         place_id: 'unknown',
         display_name: 'none',
         lat: '',
-        lon: ''}
+        lon: '',
+        },
+        map: '',
     }
   }
 
@@ -27,7 +29,15 @@ class App extends Component {
     const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
     const res = await axios.get(API);
     this.setState({location: res.data[0]});
+    console.log(res.data[0]);
+    this.getMap();
   };
+  getMap = async () => {
+    const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_AUTHTOKEN}&center=${this.state.location.lat},${this.state.location.lon}&zoom=18&size=500x500&format=png`;
+    console.log(`logging lon${this.state.location.lon}`)
+    this.setState({map: API})
+    // console.log({res})
+  }
   render() { 
     console.log(`Location Queried: ${JSON.stringify(this.state.location)}`);
     return ( 
@@ -42,8 +52,9 @@ class App extends Component {
         {this.state.location.place_id && (
           <div>
             <h2>The city is: {this.state.location.display_name}</h2>
-            <h2>Longitude: {this.state.location.lat}</h2>
-            <h2>Latitude: {this.state.location.lon}</h2>
+            <h2>Latitude: {this.state.location.lat}</h2>
+            <h2>Longitude: {this.state.location.lon}</h2>
+            <Image src={this.state.map}/>
           </div>
         )};
       </>
