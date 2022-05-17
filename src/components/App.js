@@ -6,7 +6,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import { Alert, Button, Image } from 'react-bootstrap';
+import { Alert, Button, Dropdown, Image } from 'react-bootstrap';
+import Weather from './Weather';
 
 class App extends Component {
 	constructor(props) {
@@ -21,10 +22,8 @@ class App extends Component {
 			},
 			map: '',
 			show: false,
-			weather: {
-				city: null,
-				data: null,
-			},
+			city: '',
+			data: null,
 		};
 	}
 
@@ -34,6 +33,7 @@ class App extends Component {
 			const res = await axios.get(API);
 			this.setState({ location: res.data[0] });
 			this.getMap();
+			// console.log(`Location Queried: ${JSON.stringify(this.state.location)}`);
 		} catch (error) {
 			console.error(error);
 			this.setState({ show: true });
@@ -53,7 +53,7 @@ class App extends Component {
 		return body;
 	};
 	componentDidMount() {
-		if (this.state.city !== null) {
+		if (this.state.city !== '') {
 			this.callBackendAPI(this.state.city)
 				.then((res) => {
 					this.setState({ data: res.express });
@@ -75,8 +75,15 @@ class App extends Component {
 			});
 		console.log(`App.handleSearch() data: ${this.state.data}`);
 	};
+
+	cityClick = (e) => {
+		this.setState({city: e})
+		console.log(e);
+
+	};
+
 	render() {
-		console.log(`Location Queried: ${JSON.stringify(this.state.location)}`);
+		
 		return (
 			<>
 				<Form>
@@ -106,6 +113,8 @@ class App extends Component {
 						</Alert>
 					</div>
 				)}
+
+				<Weather weather={this.state.data} city={this.state.city}/>
 			</>
 		);
 	}
