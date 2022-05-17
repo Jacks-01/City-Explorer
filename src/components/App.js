@@ -20,26 +20,60 @@ class App extends Component {
 				lon: '',
 			},
 			map: '',
-      show: false
+			show: false,
+			weather: {
+				city: null,
+				data: null,
+			},
 		};
 	}
 
 	getLocation = async () => {
-    try {
-      const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
-      const res = await axios.get(API);
-      this.setState({ location: res.data[0] });
-      this.getMap();
-    }
-
-    catch (error) {
-      console.error(error)
-      this.setState({show: true})
-    }
+		try {
+			const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
+			const res = await axios.get(API);
+			this.setState({ location: res.data[0] });
+			this.getMap();
+		} catch (error) {
+			console.error(error);
+			this.setState({ show: true });
+		}
 	};
 	getMap = async () => {
 		const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_AUTHTOKEN}&center=${this.state.location.lat},${this.state.location.lon}&zoom=18&size=500x500&format=png`;
 		this.setState({ map: API });
+	};
+
+	callBackendAPI = async (city) => {
+		const response = await fetch('/weather?city=' + city);
+		const body = await response.json();
+		if (response.status !== 200) {
+			throw Error(body.message);
+		}
+		return body;
+	};
+	componentDidMount() {
+		if (this.state.city !== null) {
+			this.callBackendAPI(this.state.city)
+				.then((res) => {
+					this.setState({ data: res.express });
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	}
+	handleSearch = async (city) => {
+		console.log(`App.handlesearch() city: ${city}`);
+		this.setState({ city: city });
+		this.callBackendAPI({ city })
+			.then((res) => {
+				this.setState({ data: res.express });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+		console.log(`App.handleSearch() data: ${this.state.data}`);
 	};
 	render() {
 		console.log(`Location Queried: ${JSON.stringify(this.state.location)}`);
@@ -63,7 +97,13 @@ class App extends Component {
 						<h2>Latitude: {this.state.location.lat}</h2>
 						<h2>Longitude: {this.state.location.lon}</h2>
 						<Image src={this.state.map} />
-            <Alert show={this.state.show} key={this.state.error} variant='danger'>Are you trying to break my code? Refresh and try again punk.</Alert>
+						<Alert
+							show={this.state.show}
+							key={this.state.error}
+							variant="danger"
+						>
+							Are you trying to break my code? Refresh and try again punk.
+						</Alert>
 					</div>
 				)}
 			</>
