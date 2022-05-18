@@ -51,24 +51,14 @@ class App extends Component {
 
 	callBackendAPI = async (city) => {
 		console.log(typeof city);
-
-		const weatherQuery = 'http://localhost:5000/weather?' + city;
+		const weatherQuery = 'http://localhost:5000/weather?city=' + city;
 		console.log(`this our search query ${weatherQuery}`);
-		
 		const response = await axios.get(weatherQuery)
-			.then((response) => {
-				this.setState({ data: response.data });
-				console.log(response.data);
-				console.log(`App.handleSearch() data: ${this.state.data}`);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
 
-			// if (response.status !== 200) {
-			// 	throw Error(response.message);
-			// }
-			return response;
+		if (response.status !== 200) {
+			throw Error(response.message);
+		}
+		return response;
 	};
 
 	componentDidMount() {
@@ -86,7 +76,14 @@ class App extends Component {
 		console.log(`App.handlesearch() city: ${e}`);
 		this.setState({ city: e });
 		this.callBackendAPI( e )
-		
+			.then((response) => {
+				this.setState({ data: response.data.express });
+				console.log(`App.handleSearch() data: ${this.state.data}`);
+				console.log(response.data.express);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	// cityClick = async (e) => {
