@@ -6,8 +6,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import { Alert, Button, Dropdown, Image } from 'react-bootstrap';
-import Weather from './Weather';
+import {
+	Alert,
+	Button,
+	Dropdown,
+	Image,
+	DropdownButton,
+} from 'react-bootstrap';
 
 class App extends Component {
 	constructor(props) {
@@ -22,7 +27,7 @@ class App extends Component {
 			},
 			map: '',
 			show: false,
-			city: '',
+			city: null,
 			data: null,
 		};
 	}
@@ -45,45 +50,52 @@ class App extends Component {
 	};
 
 	callBackendAPI = async (city) => {
-		const response = await fetch('/weather?city=' + city);
-		const body = await response.json();
-		if (response.status !== 200) {
-			throw Error(body.message);
-		}
-		return body;
+		console.log(typeof city);
+
+		const weatherQuery = 'http://localhost:5000/weather?' + city;
+		console.log(`this our search query ${weatherQuery}`);
+		
+		const response = await axios.get(weatherQuery)
+			.then((response) => {
+				this.setState({ data: response.data });
+				console.log(response.data);
+				console.log(`App.handleSearch() data: ${this.state.data}`);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
+			// if (response.status !== 200) {
+			// 	throw Error(response.message);
+			// }
+			return response;
 	};
+
 	componentDidMount() {
-		if (this.state.city !== '') {
+		if (this.state.city !== null) {
 			this.callBackendAPI(this.state.city)
-				.then((res) => {
-					this.setState({ data: res.express });
+				.then((response) => {
+					this.setState({ data: response.data });
 				})
 				.catch((err) => {
 					console.log(err);
 				});
 		}
 	}
-	handleSearch = async (city) => {
-		console.log(`App.handlesearch() city: ${city}`);
-		this.setState({ city: city });
-		this.callBackendAPI({ city })
-			.then((res) => {
-				this.setState({ data: res.express });
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-		console.log(`App.handleSearch() data: ${this.state.data}`);
+	handleSearch = async (e) => {
+		console.log(`App.handlesearch() city: ${e}`);
+		this.setState({ city: e });
+		this.callBackendAPI( e )
+		
 	};
 
-	cityClick = (e) => {
-		this.setState({city: e})
-		console.log(e);
-
-	};
+	// cityClick = async (e) => {
+	// 	this.setState({ city: e });
+	// 	console.log(e);
+	// 	this.handleSearch(e);
+	// };
 
 	render() {
-		
 		return (
 			<>
 				<Form>
@@ -113,8 +125,21 @@ class App extends Component {
 						</Alert>
 					</div>
 				)}
-
-				<Weather weather={this.state.data} city={this.state.city}/>
+				<div>
+					<h1>Get your weather forecast!</h1>
+					<Dropdown>
+						<DropdownButton title="Choose a city" onSelect={this.handleSearch}>
+							<Dropdown.Item eventKey="Seattle">Seattle</Dropdown.Item>
+							<Dropdown.Item eventKey="Paris">Paris</Dropdown.Item>
+							<Dropdown.Item eventKey="Amman">Amman</Dropdown.Item>
+						</DropdownButton>
+					</Dropdown>
+					{this.state.city && (
+						<>
+							<p>{this.state.data}</p>
+						</>
+					)}
+				</div>
 			</>
 		);
 	}
