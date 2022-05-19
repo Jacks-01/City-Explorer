@@ -28,7 +28,7 @@ class App extends Component {
 			map: '',
 			show: false,
 			city: null,
-			data: null,
+			data: [],
 		};
 	}
 
@@ -49,48 +49,28 @@ class App extends Component {
 		this.setState({ map: API });
 	};
 
-	callBackendAPI = async (city) => {
-		console.log(typeof city);
-		const weatherQuery = 'http://localhost:5000/weather?city=' + city;
-		console.log(`this our search query ${weatherQuery}`);
-		const response = await axios.get(weatherQuery)
-
-		if (response.status !== 200) {
-			throw Error(response.message);
-		}
+	callBackendAPI = async (e) => {
+		console.log(typeof e);
+		const weatherQuery = 'http://localhost:5000/weather?city=' + e;
+		console.log('this is our search query', weatherQuery);
+		const response = await axios.get(weatherQuery);
+		console.log('console log response', response);
 		return response;
 	};
 
-	componentDidMount() {
-		if (this.state.city !== null) {
-			this.callBackendAPI(this.state.city)
-				.then((response) => {
-					this.setState({ data: response.data });
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}
 	handleSearch = async (e) => {
-		console.log(`App.handlesearch() city: ${e}`);
+		console.log(`handlesearch() city: ${e}`);
 		this.setState({ city: e });
-		this.callBackendAPI( e )
+		this.callBackendAPI(e)
 			.then((response) => {
-				this.setState({ data: response.data.express });
-				console.log(`App.handleSearch() data: ${this.state.data}`);
-				console.log(response.data.express);
+				this.setState({ data: response.data });
+				console.log(` data: ${this.state.data}`);
+				console.log(response.data);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	};
-
-	// cityClick = async (e) => {
-	// 	this.setState({ city: e });
-	// 	console.log(e);
-	// 	this.handleSearch(e);
-	// };
 
 	render() {
 		return (
@@ -133,7 +113,13 @@ class App extends Component {
 					</Dropdown>
 					{this.state.city && (
 						<>
-							<p>{this.state.data}</p>
+							<h2>Your 3-day forecast for {this.state.city} is: </h2>
+							{this.state.data.map((day, index) => (
+							<div key={index}>
+								<p>day: {day.date}</p>
+								<p>description:{day.description}</p>
+							</div>
+							))}
 						</>
 					)}
 				</div>
