@@ -6,10 +6,16 @@
  */
 
 import React, { Component } from 'react';
-import {Form, Alert, Button, Image} from 'raect-bootstrap';
+import {Form, Button} from 'react-bootstrap';
+
 
 
 class CityForm extends Component {
+	handleClick = () => {
+		let value = document.getElementById('myForm').value
+		this.props.getLocation(value);
+	};
+	
 	render() {
 		return (
 			<>
@@ -17,12 +23,12 @@ class CityForm extends Component {
 					<Form.Group>
 						<Form.Label>Enter a location!</Form.Label>
 						<Form.Control
-							onChange={(e) => this.setState({ searchQuery: e.target.value })}
+							id='myForm'
 							placeholder="Enter location"
 						/>
 					</Form.Group>
 				</Form>
-				<Button onClick={this.props.getLocation} variant="primary" type="submit">
+				<Button onClick={this.handleClick} variant="primary" type="submit">
 					Explore!
 				</Button>
 			</>

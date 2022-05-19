@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import CityForm from './CityForm';
-import CitySelector from './CitySelector';
+import CitySearch from './CitySearch';
 import Weather from './Weather';
 
 
@@ -16,13 +15,17 @@ class Main extends Component {
 	} 
     render() { 
         return (
-            <>
-            <CityForm/>
-            <CitySelector></CitySelector>
+            <div>
+            <h1>Hi this is bob</h1>
+            <CitySearch/>
             <Weather/>
-            </>
+            </div>
           );
-    }
+    } 
+    /**
+     * <CitySelector/>
+            <Weather/>
+     */
 }
  
 export default Main;

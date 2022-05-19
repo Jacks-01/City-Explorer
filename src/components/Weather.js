@@ -12,14 +12,16 @@ class Weather extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            city: '',
+            city: null,
             weatherData: [],
         };
     }
 
     callBackendAPI = async (e) => {
         const weatherQuery = 'http://localhost:5000/weather?city=' + e;
+        console.log('this is the weather query', weatherQuery);
         const response = await axios.get(weatherQuery);
+
         return response;
     };
 
@@ -35,23 +37,25 @@ class Weather extends Component {
             });
     };
 	render() {
-		console.log(this.props.weatherData);
+		console.log(this.state.weatherData);
 		return (
 			<>
-                <CitySelector/>
-				{this.props.city && (
+                <CitySelector
+                handleSearch={this.handleSearch}/>
+                
+				{this.state.city && (
 					<>
-						<h2>Your 3-day forecast for {this.props.city} is: </h2>
-						{this.props.weatherData.map((day, index) => (
+						<h2>Your 3-day forecast for {this.state.city} is: </h2>
+						{this.state.weatherData.map((day, index) => (
 							<div key={index}>
 								<p>day: {day.date}</p>
-								<p>description:{day.description}</p>
+								<p>description: {day.description}</p>
 							</div>
 						))}
 					</>
 				)}
 			</>
-		);
+		)
 	}
 }
 

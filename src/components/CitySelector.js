@@ -3,7 +3,10 @@ import {Dropdown, DropdownButton} from 'react-bootstrap';
 
 
 class CitySelector extends Component {
-    render() {      
+    handleSearch = (e) => {
+
+    };
+    render() { 
         return ( 
         <div>
             <h1>Get your weather forecast!</h1>

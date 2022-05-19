@@ -9,7 +9,7 @@ class CitySearch extends Component {
 		this.state = {
 			searchQuery: '',
 			location: {
-				place_id: 'unknown',
+				place_id: null,
 				display_name: 'none',
 				lat: '',
 				lon: '',
@@ -17,13 +17,17 @@ class CitySearch extends Component {
 			map: '',
 			show: false,
 		};
-
-		getLocation = async () => {
+    }
+        /**
+         * 
+         * @param {string} cityName - the city name from the search
+         */
+		getLocation = async (cityName) => {
 			try {
-				const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${this.state.searchQuery}&format=json`;
+                this.setState({searchQuery: cityName})
+				const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${cityName}&format=json`;
 				const res = await axios.get(API);
-				this.setState({ location: res.data[0] });
-				this.getMap();
+				this.setState({ location: res.data[0] }, this.getMap);
 			} catch (error) {
 				console.error(error);
 				this.setState({ show: true });
@@ -33,12 +37,20 @@ class CitySearch extends Component {
 			const API = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_AUTHTOKEN}&center=${this.state.location.lat},${this.state.location.lon}&zoom=18&size=500x500&format=png`;
 			this.setState({ map: API });
 		};
-	}
+
 	render() {
 		return (
 			<>
-				<CityForm />
-				<CityMap />
+				<CityForm getLocation={this.getLocation}/>
+                {this.state.location.place_id && (
+                    <CityMap
+                     location={this.state.location}
+                     map={this.state.map}
+                     show={this.state.show}
+                     error={this.state.error}
+                     />
+
+                )}
 			</>
 		);
 	}
