@@ -6,8 +6,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import { Alert, Button, Dropdown, Image } from 'react-bootstrap';
-import Weather from './Weather';
+import {
+	Alert,
+	Button,
+	Dropdown,
+	Image,
+	DropdownButton,
+} from 'react-bootstrap';
 
 class App extends Component {
 	constructor(props) {
@@ -22,8 +27,8 @@ class App extends Component {
 			},
 			map: '',
 			show: false,
-			city: '',
-			data: null,
+			city: null,
+			data: [],
 		};
 	}
 
@@ -44,46 +49,30 @@ class App extends Component {
 		this.setState({ map: API });
 	};
 
-	callBackendAPI = async (city) => {
-		const response = await fetch('/weather?city=' + city);
-		const body = await response.json();
-		if (response.status !== 200) {
-			throw Error(body.message);
-		}
-		return body;
+	callBackendAPI = async (e) => {
+		console.log(typeof e);
+		const weatherQuery = 'http://localhost:5000/weather?city=' + e;
+		console.log('this is our search query', weatherQuery);
+		const response = await axios.get(weatherQuery);
+		console.log('console log response', response);
+		return response;
 	};
-	componentDidMount() {
-		if (this.state.city !== '') {
-			this.callBackendAPI(this.state.city)
-				.then((res) => {
-					this.setState({ data: res.express });
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}
-	handleSearch = async (city) => {
-		console.log(`App.handlesearch() city: ${city}`);
-		this.setState({ city: city });
-		this.callBackendAPI({ city })
-			.then((res) => {
-				this.setState({ data: res.express });
+
+	handleSearch = async (e) => {
+		console.log(`handlesearch() city: ${e}`);
+		this.setState({ city: e });
+		this.callBackendAPI(e)
+			.then((response) => {
+				this.setState({ data: response.data });
+				console.log(` data: ${this.state.data}`);
+				console.log(response.data);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-		console.log(`App.handleSearch() data: ${this.state.data}`);
-	};
-
-	cityClick = (e) => {
-		this.setState({city: e})
-		console.log(e);
-
 	};
 
 	render() {
-		
 		return (
 			<>
 				<Form>
@@ -113,8 +102,27 @@ class App extends Component {
 						</Alert>
 					</div>
 				)}
-
-				<Weather weather={this.state.data} city={this.state.city}/>
+				<div>
+					<h1>Get your weather forecast!</h1>
+					<Dropdown>
+						<DropdownButton title="Choose a city" onSelect={this.handleSearch}>
+							<Dropdown.Item eventKey="Seattle">Seattle</Dropdown.Item>
+							<Dropdown.Item eventKey="Paris">Paris</Dropdown.Item>
+							<Dropdown.Item eventKey="Amman">Amman</Dropdown.Item>
+						</DropdownButton>
+					</Dropdown>
+					{this.state.city && (
+						<>
+							<h2>Your 3-day forecast for {this.state.city} is: </h2>
+							{this.state.data.map((day, index) => (
+							<div key={index}>
+								<p>day: {day.date}</p>
+								<p>description:{day.description}</p>
+							</div>
+							))}
+						</>
+					)}
+				</div>
 			</>
 		);
 	}
