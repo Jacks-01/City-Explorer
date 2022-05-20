@@ -34,7 +34,14 @@ class Weather extends Component {
 				lat: this.state.location.lat,
 				lon: this.state.location.lon
 			}
-		});
+		})
+			.then((response) => {
+				console.log(response.data);
+				this.setState({weatherData: response.data});
+				console.log(this.weatherData);
+				this.setState({city : this.state.location.display_name})
+			});
+			
 
 
 
@@ -67,7 +74,7 @@ class Weather extends Component {
 	};
 
 	render() {
-		// console.log(this.state.weatherData);
+		console.log(this.state.weatherData);
 		return (
 			<>
 				<WeatherForm getLocation={this.getLocation}/>
@@ -77,7 +84,7 @@ class Weather extends Component {
 						<h2>Your 3-day forecast for {this.state.city} is: </h2>
 						{this.state.weatherData.map((day, index) => (
 							<div key={index}>
-								<p>day: {day.date}</p>
+								<p>day: {day.datetime}</p>
 								<p>description: {day.description}</p>
 							</div>
 						))}
