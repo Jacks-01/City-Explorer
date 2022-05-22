@@ -5,7 +5,6 @@
  */
 import React, { Component } from 'react';
 import axios from 'axios';
-// import CitySelector from './CitySelector';
 import WeatherForm from './WeatherForm';
 
 class Weather extends Component {
@@ -18,12 +17,13 @@ class Weather extends Component {
 				display_name: 'none',
 				lat: '',
 				lon: '',
-				},
+			},
 
 			city: null,
 			weatherData: [],
+			movieData: [],
+		};
 	}
-};
 
 	callBackendAPI = async () => {
 		await axios({
@@ -32,31 +32,29 @@ class Weather extends Component {
 			params: {
 				city: this.state.searchQuery,
 				lat: this.state.location.lat,
-				lon: this.state.location.lon
-			}
+				lon: this.state.location.lon,
+			},
+		}).then((response) => {
+			console.log(response.data);
+			this.setState({ weatherData: response.data });
+			console.log(this.weatherData);
+			this.setState({ city: this.state.location.display_name });
+		});
+		
+		await axios({
+			method: 'get',
+			url: 'http://localhost:5000/movies',
+			params: {
+				year: 2022
+			},
 		})
-			.then((response) => {
-				console.log(response.data);
-				this.setState({weatherData: response.data});
-				console.log(this.weatherData);
-				this.setState({city : this.state.location.display_name})
-			});
-			
-
-
-
-
-	// 	// const sendQuery = `https://localhost:5000/weather?city=${e}&lat=${this.state.lat}&lon=${this.state.lon}`;
-	// 	// console.log(`Query Parameters:  City: ${e}, lat: ${this.state.lat}, lon: ${this.state.lon}`);
-	// 	// const response = await axios.get(sendQuery);
-        
-	// 	// const weatherQuery = 'http://localhost:5000/weather?city=' + e;
-	// 	// console.log('this is the weather query', weatherQuery);
-	// 	// const response = await axios.get(weatherQuery);
-
-	// 	// return response;
+		.then((response) => {
+			console.log(response);
+		}).catch((err) => {
+			console.error(err);
+		});
 	};
-	
+
 	getLocation = async (cityName) => {
 		try {
 			console.log('this is the city', cityName);
@@ -77,8 +75,7 @@ class Weather extends Component {
 		console.log(this.state.weatherData);
 		return (
 			<>
-				<WeatherForm getLocation={this.getLocation}/>
-				{/* <CitySelector handleSearch={this.handleSearch} /> */}
+				<WeatherForm getLocation={this.getLocation} />
 				{this.state.city && (
 					<>
 						<h2>Your 3-day forecast for {this.state.city} is: </h2>
