@@ -50,6 +50,8 @@ class Weather extends Component {
 		})
 		.then((response) => {
 			console.log(response);
+			this.setState({movieData: response.data});
+			console.log('current state of movieData:', this.state.movieData);
 		}).catch((err) => {
 			console.error(err);
 		});
@@ -86,6 +88,15 @@ class Weather extends Component {
 							</div>
 						))}
 					</>
+				)}
+				{this.state.weatherData && 
+				(this.state.movieData.map((movie, index) => {
+					<div key={index}>
+						<p> Title: {movie.title}</p>
+						<p>overview: {movie.overview}</p>
+					</div>
+				})
+
 				)}
 			</>
 		);
