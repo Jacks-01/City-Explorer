@@ -94,7 +94,12 @@ class CityData extends Component {
 						<Weather weatherData={this.state.weatherData} />
 					</section>
 				)}
-				{this.state.weatherData && <Movies movieData={this.state.movieData} />}
+				{this.state.city && (
+					<section>
+						<h3>Movies in your area:</h3>
+						<Movies movieData={this.state.movieData} />
+					</section>
+				)}
 			</>
 		);
 	}
