@@ -35,7 +35,7 @@ class CityData extends Component {
 	callBackendAPI = async () => {
 		await axios({
 			method: 'get',
-			url: `${server}weather`,
+			url: `https://city-explorer-jack.herokuapp.com/weather`,
 			params: {
 				city: this.state.searchQuery,
 				lat: this.state.location.lat,
@@ -48,7 +48,7 @@ class CityData extends Component {
 
 		await axios({
 			method: 'get',
-			url: `${server}movies`,
+			url: `https://city-explorer-jack.herokuapp.com/movies`,
 			params: {
 				year: 2022,
 			},
