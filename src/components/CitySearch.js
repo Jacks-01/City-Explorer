@@ -42,7 +42,7 @@ class CitySearch extends Component {
 		return (
 			<>
 				<CityForm getLocation={this.getLocation} />
-				{this.state.location.place_id && (
+				{this.state.location.place_id && (	
 					<CityMap
 						location={this.state.location}
 						map={this.state.map}
