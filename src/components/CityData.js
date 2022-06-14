@@ -67,13 +67,21 @@ class Weather extends Component {
 			const API = `https://us1.locationiq.com/v1/search.php?key=${locationKey}&q=${cityName}&format=json`;
 			const res = await axios.get(API);
 			// console.log('this is the locationIQ data',res.data);
-			this.setState({ location: res.data[0] }, this.callBackendAPI);
+			this.setState({ location: res.data[0] }, this.getMap);
+			this.callBackendAPI();
 			// console.log('this is the state of location:', this.state);
 		} catch (error) {
 			console.error(error);
 			this.setState({ show: true });
 		}
+
 	};
+
+	getMap = async () => {
+			const API = `https://maps.locationiq.com/v3/staticmap?key=${locationKey}&center=${this.state.location.lat},${this.state.location.lon}&zoom=18&size=500x500&format=png`;
+			this.setState({ map: API });
+	};
+	
 
 	render() {
 		console.log(this.state.weatherData);
@@ -97,14 +105,13 @@ class Weather extends Component {
 						))}
 					</>
 				)}
-				{this.state.weatherData && 
-				(this.state.movieData.map((movie, index) => {
+				{this.state.weatherData && (
+					this.state.movieData.map((movie, index) => 
 					<div key={index}>
 						<p> Title: {movie.title}</p>
 						<p>overview: {movie.overview}</p>
 					</div>
-				})
-
+				)
 				)}
 			</>
 		);
