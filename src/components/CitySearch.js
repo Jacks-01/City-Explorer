@@ -1,3 +1,7 @@
+/**
+ * @file CitySearch.js
+ * @description Responsible for making the axios call to LocationIQ, then passes the data to a new co mponent.
+ */
 import React, { Component } from 'react';
 import axios from 'axios';
 import CityForm from './CityForm';

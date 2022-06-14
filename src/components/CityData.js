@@ -1,11 +1,13 @@
 /**
  * @file Weather.js
  * @author Jack Stubblefield
- * @desc
+ * @description contains all of the location data in order to query weather, movies, and location
  */
 import React, { Component } from 'react';
 import axios from 'axios';
-import WeatherForm from './WeatherForm';
+import CityForm from './CityForm';
+import CityMap from './CityMap';
+const locationKey = process.env.REACT_APP_AUTHTOKEN;
 
 class Weather extends Component {
 	constructor(props) {
@@ -20,6 +22,7 @@ class Weather extends Component {
 			},
 
 			city: null,
+			map: '',
 			weatherData: [],
 			movieData: [],
 		};
@@ -61,11 +64,10 @@ class Weather extends Component {
 		try {
 			console.log('this is the city', cityName);
 			this.setState({ searchQuery: cityName });
-			const API = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_AUTHTOKEN}&q=${cityName}&format=json`;
+			const API = `https://us1.locationiq.com/v1/search.php?key=${locationKey}&q=${cityName}&format=json`;
 			const res = await axios.get(API);
 			// console.log('this is the locationIQ data',res.data);
 			this.setState({ location: res.data[0] }, this.callBackendAPI);
-			this.callBackendAPI();
 			// console.log('this is the state of location:', this.state);
 		} catch (error) {
 			console.error(error);
@@ -77,7 +79,13 @@ class Weather extends Component {
 		console.log(this.state.weatherData);
 		return (
 			<>
-				<WeatherForm getLocation={this.getLocation} />
+				<CityForm getLocation={this.getLocation}/>
+				<CityMap
+						location={this.state.location}
+						map={this.state.map}
+						show={this.state.show}
+						error={this.state.error}
+					/>
 				{this.state.city && (
 					<>
 						<h2>Your 3-day forecast for {this.state.city} is: </h2>
