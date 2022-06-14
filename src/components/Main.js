@@ -4,8 +4,6 @@
  */
 import React, { Component } from 'react';
 import CityData from './CityData';
-import CitySearch from './CitySearch';
-import CityMap from './CityMap';
 
 class Main extends Component {
 	constructor(props) {

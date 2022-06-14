@@ -7,9 +7,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CityForm from './CityForm';
 import CityMap from './CityMap';
+import Movies from './Movies';
+import Weather from './Weather';
 const locationKey = process.env.REACT_APP_AUTHTOKEN;
 
-class Weather extends Component {
+class CityData extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,6 +23,7 @@ class Weather extends Component {
 				lon: '',
 			},
 
+			show: false,
 			city: null,
 			map: '',
 			weatherData: [],
@@ -38,9 +41,9 @@ class Weather extends Component {
 				lon: this.state.location.lon,
 			},
 		}).then((response) => {
-			console.log(response.data);
+			// console.log(response.data);
 			this.setState({ weatherData: response.data });
-			console.log(this.weatherData);
+			// console.log(this.weatherData);
 			this.setState({ city: this.state.location.display_name });
 		});
 		
@@ -52,9 +55,9 @@ class Weather extends Component {
 			},
 		})
 		.then((response) => {
-			console.log(response);
+			// console.log(response);
 			this.setState({movieData: response.data});
-			console.log('current state of movieData:', this.state.movieData);
+			// console.log('current state of movieData:', this.state.movieData);
 		}).catch((err) => {
 			console.error(err);
 		});
@@ -97,25 +100,16 @@ class Weather extends Component {
 				{this.state.city && (
 					<>
 						<h2>Your 3-day forecast for {this.state.city} is: </h2>
-						{this.state.weatherData.map((day, index) => (
-							<div key={index}>
-								<p>day: {day.datetime}</p>
-								<p>description: {day.description}</p>
-							</div>
-						))}
+						<Weather weatherData={this.state.weatherData}/>
+					
 					</>
 				)}
 				{this.state.weatherData && (
-					this.state.movieData.map((movie, index) => 
-					<div key={index}>
-						<p> Title: {movie.title}</p>
-						<p>overview: {movie.overview}</p>
-					</div>
-				)
+					<Movies movieData={this.state.movieData}/>	
 				)}
 			</>
 		);
 	}
 }
 
-export default Weather;
+export default CityData;

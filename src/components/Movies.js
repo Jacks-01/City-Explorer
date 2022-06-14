@@ -2,16 +2,16 @@
  * @file Movies.js
  * @description Displays the movie data that is held in Main.js
  */
-import React, { Component } from 'react';
 
-class Movies extends Component {
+const Movies = (props) => {
+	return(
+		props.movieData.map((movie, index) => (
+			<div key={index}>
+				<p> Title: {movie.title}</p>
+				<p>overview: {movie.overview}</p>
+			</div>
+		))
+	);
+};
 
-    render() { 
-        return ( 
-            <>
-            </>
-         );
-    }
-}
- 
 export default Movies;
