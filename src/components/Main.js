@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import CitySearch from './CitySearch';
 import Weather from './Weather';
 
 class Main extends Component {
