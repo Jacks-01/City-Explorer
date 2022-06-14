@@ -10,6 +10,7 @@ import CityMap from './CityMap';
 import Movies from './Movies';
 import Weather from './Weather';
 const locationKey = process.env.REACT_APP_AUTHTOKEN;
+const server = process.env.REACT_APP_SERVER;
 
 class CityData extends Component {
 	constructor(props) {
@@ -34,7 +35,7 @@ class CityData extends Component {
 	callBackendAPI = async () => {
 		await axios({
 			method: 'get',
-			url: 'http://localhost:5000/weather',
+			url: `${server}/weather`,
 			params: {
 				city: this.state.searchQuery,
 				lat: this.state.location.lat,
@@ -47,7 +48,7 @@ class CityData extends Component {
 
 		await axios({
 			method: 'get',
-			url: 'http://localhost:5000/movies',
+			url: `${server}/movies`,
 			params: {
 				year: 2022,
 			},
