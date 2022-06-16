@@ -9,6 +9,7 @@ import CityForm from './CityForm';
 import CityMap from './CityMap';
 import Movies from './Movies';
 import Weather from './Weather';
+import { Container, Row, Stack } from 'react-bootstrap';
 const locationKey = process.env.REACT_APP_AUTHTOKEN;
 const server = process.env.REACT_APP_SERVER;
 
@@ -91,9 +92,15 @@ class CityData extends Component {
 					error={this.state.error}
 				/>
 				{this.state.city && (
-					<section>
+					<section >
 						<h2>Your 3-day forecast for {this.state.city} is: </h2>
-						<Weather weatherData={this.state.weatherData} />
+						<Container style={{display: 'flex', justifyContent: 'center'}}>
+							<Row>
+								<Stack direction="horizontal" gap={3}>
+									<Weather weatherData={this.state.weatherData} />
+								</Stack>
+							</Row>
+						</Container>
 					</section>
 				)}
 				{this.state.city && (
