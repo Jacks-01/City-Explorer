@@ -9,6 +9,7 @@ import CityForm from './CityForm';
 import CityMap from './CityMap';
 import Movies from './Movies';
 import Weather from './Weather';
+import { Container, Row, Stack } from 'react-bootstrap';
 const locationKey = process.env.REACT_APP_AUTHTOKEN;
 const server = process.env.REACT_APP_SERVER;
 
@@ -32,6 +33,9 @@ class CityData extends Component {
 		};
 	}
 
+	componentDidMount = () => {
+		document.body.style.backgroundColor = '#c7c9ff'
+	}
 	callBackendAPI = async () => {
 		await axios({
 			method: 'get',
@@ -80,9 +84,12 @@ class CityData extends Component {
 	};
 
 	render() {
+		console.log(this.state.weatherData);
 		return (
 			<>
 				<CityForm getLocation={this.getLocation} />
+				
+				<h2 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}> {this.state.location.display_name} </h2>
 				<CityMap
 					location={this.state.location}
 					map={this.state.map}
@@ -90,14 +97,20 @@ class CityData extends Component {
 					error={this.state.error}
 				/>
 				{this.state.city && (
-					<section>
-						<h2>Your 3-day forecast for {this.state.city} is: </h2>
-						<Weather weatherData={this.state.weatherData} />
+					<section >
+						<h2 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}>Your 3-day forecast for {this.state.city} is: </h2>
+						<Container style={{display: 'flex', justifyContent: 'center'}}>
+							<Row>
+								<Stack direction="horizontal" gap={3}>
+									<Weather weatherData={this.state.weatherData} />
+								</Stack>
+							</Row>
+						</Container>
 					</section>
 				)}
 				{this.state.city && (
 					<section>
-						<h3>Movies in your area:</h3>
+						<h3 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}>Movies in your area:</h3>
 						<Movies movieData={this.state.movieData} />
 					</section>
 				)}

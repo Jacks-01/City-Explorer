@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
-import {Image, Alert} from 'react-bootstrap';
+import { Image, Alert, Container, Row, Col } from 'react-bootstrap';
 
 class CityMap extends Component {
-
 	render() {
 		return (
-			<div>
+			<Container style={{ display: 'flex', justifyContent: 'center' }}>
 				
-					<div>
-						<h2>The city is: {this.props.location.display_name}</h2>
-						<h2>Latitude: {this.props.location.lat}</h2>
-						<h2>Longitude: {this.props.location.lon}</h2>
-						<Image src={this.props.map} />
-						<Alert
-							show={this.props.show}
-							key={this.props.error}
-							variant="danger"
-						>
-							Are you trying to break my code? Refresh and try again punk.
-						</Alert>
-					</div>
-				
-			</div>
+				<Row>
+					<Image src={this.props.map} />
+				</Row>
+
+				<Alert show={this.props.show} key={this.props.error} variant="danger">
+					Are you trying to break my code? Refresh and try again punk.
+				</Alert>
+			</Container>
 		);
 	}
 }
