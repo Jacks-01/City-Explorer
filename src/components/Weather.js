@@ -3,12 +3,14 @@
  * @description displays weather data in a nice bootstrap component
  */
 import React, { Component } from 'react';
-
+import { Image } from 'react-bootstrap';
+// C:\Users\DeltaVStudent\projects\Code301\city-explorer\city-explorer-front\src\icons\._c03d.png
 const Weather = (props) => {
 	return props.weatherData.map((day, index) => (
 		<div key={index}>
-			<p>day: {day.datetime}</p>
-			<p>description: {day.description}</p>
+			<Image src={`/icons/${day.icon}.png`}/>
+			<p>{day.date}</p>
+			<p>{day.description}</p>
 		</div>
 	));
 };

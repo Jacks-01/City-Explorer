@@ -80,6 +80,7 @@ class CityData extends Component {
 	};
 
 	render() {
+		console.log(this.state.weatherData);
 		return (
 			<>
 				<CityForm getLocation={this.getLocation} />
