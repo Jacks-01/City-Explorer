@@ -33,6 +33,9 @@ class CityData extends Component {
 		};
 	}
 
+	componentDidMount = () => {
+		document.body.style.backgroundColor = '#c7c9ff'
+	}
 	callBackendAPI = async () => {
 		await axios({
 			method: 'get',
@@ -85,6 +88,8 @@ class CityData extends Component {
 		return (
 			<>
 				<CityForm getLocation={this.getLocation} />
+				
+				<h2 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}> {this.state.location.display_name} </h2>
 				<CityMap
 					location={this.state.location}
 					map={this.state.map}
@@ -93,7 +98,7 @@ class CityData extends Component {
 				/>
 				{this.state.city && (
 					<section >
-						<h2>Your 3-day forecast for {this.state.city} is: </h2>
+						<h2 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}>Your 3-day forecast for {this.state.city} is: </h2>
 						<Container style={{display: 'flex', justifyContent: 'center'}}>
 							<Row>
 								<Stack direction="horizontal" gap={3}>
@@ -105,7 +110,7 @@ class CityData extends Component {
 				)}
 				{this.state.city && (
 					<section>
-						<h3>Movies in your area:</h3>
+						<h3 style={{display: 'flex', justifyContent: 'center', padding: '1rem'}}>Movies in your area:</h3>
 						<Movies movieData={this.state.movieData} />
 					</section>
 				)}
